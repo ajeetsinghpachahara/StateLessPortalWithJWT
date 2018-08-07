@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="
+		http://www.springframework.org/schema/security 
+        http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+   
+    
+    <global-method-security pre-post-annotations="enabled" />
+    <http pattern="/token" security="none"/>
+   
+    <http pattern="/rest/**" entry-point-ref="jwtAuthenticationEntryPoint" create-session="stateless">
+         <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/>  
+    </http>
+    
+    <beans:bean id="jwtAuthenticationFilter" class="com.ajeet.first.jwtsecurity.JwtAuthenticationTokenFilter">  
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+        <beans:property name="authenticationSuccessHandler" ref="jwtSuccessHandler" />  
+    </beans:bean>
+    
+    <beans:bean id="jwtSuccessHandler" class="com.ajeet.first.jwtsecurity.JwtSuccessHandler">  
+    </beans:bean>
+    
+   
+     <beans:bean id="jwtAuthenticationEntryPoint" class="com.ajeet.first.jwtsecurity.JwtAuthenticationEntryPoint">  
+    </beans:bean>
+
+    <beans:bean id="jwtAuthenticationProvider" class="com.ajeet.first.jwtsecurity.JwtAuthenticationProvider">  
+    </beans:bean>
+        
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="jwtAuthenticationProvider" /> 
+    </authentication-manager>
+    
+ 
+   
+
+</beans:beans>
